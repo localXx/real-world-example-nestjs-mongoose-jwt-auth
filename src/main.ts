@@ -6,15 +6,21 @@ import { warn } from 'console';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
+const cors = require('cors');
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(cors());
 
   // ╦ ╦╔═╗╔═╗  ╔═╗╦  ╔═╗╔╗ ╔═╗╦    ╔═╗╦╔═╗╔═╗╔═╗
   // ║ ║╚═╗║╣   ║ ╦║  ║ ║╠╩╗╠═╣║    ╠═╝║╠═╝║╣ ╚═╗
   // ╚═╝╚═╝╚═╝  ╚═╝╩═╝╚═╝╚═╝╩ ╩╩═╝  ╩  ╩╩  ╚═╝╚═╝
-  app.useGlobalPipes(new ValidationPipe({
-    // disableErrorMessages: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      // disableErrorMessages: true,
+    }),
+  );
 
   // ╔═╗╦ ╦╔═╗╔═╗╔═╗╔═╗╦═╗
   // ╚═╗║║║╠═╣║ ╦║ ╦║╣ ╠╦╝
@@ -26,9 +32,7 @@ async function bootstrap() {
     .addTag('API')
     .build();
   const document = SwaggerModule.createDocument(app, options, {
-    include: [
-      UserModule,
-  ],
+    include: [UserModule],
   });
   SwaggerModule.setup('api', app, document);
 
